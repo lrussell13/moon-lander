@@ -10,13 +10,18 @@ import animFrame5 from './Images/SpaceLander/pixil-frame-5.png';
 class App extends React.Component {
   state = {
     lander: {
-      x: 10,
-      y: 10,
-      dy: 1,
+      x: 120,
+      y: 160,
+      dy: 2,
       dx: 0,
+      bottomY: 0,
       radius: 20,
       playAnimation: false,
-      animationFrame: 0
+      animationFrame: 0,
+      offsetY: 0,
+      viewport: {
+        y: 160
+      }
     }
   }
 
@@ -55,31 +60,50 @@ class App extends React.Component {
 
   update = () => {
     let lander = this.state.lander;
+    let offsetY = -(lander.y);
+    lander.offsetY = offsetY
 
-    if(lander.y + lander.dy >= (this.refs.canvas.height - 45)){
-      lander.dy = 0;
+    if(lander.y >= 2880){
+      lander.viewport.y = lander.y - 2880;
     } else {
-      lander.x += lander.dx;
-      lander.dy *= 1.04;
-      lander.y += lander.dy;
+      lander.viewport.y = lander.y + offsetY;
     }
     
-
-    this.setState({lander})
+    if((lander.y + lander.viewport.y + lander.dy) >= 3200 - 160){
+      lander.dy = 0;
+    } else {
+      //lander.dy *= 1.04;
+      lander.y += lander.dy;
+      lander.x += lander.dx;
+    }
+  
+    
+    this.setState({lander});
     requestAnimationFrame(this.update);
     this.draw();
   }
   
   draw = () => {
     let x = this.state.lander.x
-    let y = this.state.lander.y
+    let y = this.state.lander.viewport.y + 25
+
     const canvas = this.refs.canvas;
     const ctx = canvas.getContext("2d");
     const img = this.choseImg(this.state.lander.animationFrame)
-  
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    while(this.state.lander.y < 2980 && this.state.lander.y > 1999){
+      ctx.beginPath();
+      ctx.moveTo(0, 2000 - this.state.lander.offsetY);
+      ctx.lineTo(300, 100);
+      ctx.stroke();
+    }
+
     ctx.drawImage(img, x, y, 50, 50);
+    console.log(x, this.state.lander.y, y);
   }
+
+
 
   choseImg(animationFrame) {
     if(animationFrame === 0){
@@ -148,7 +172,6 @@ class App extends React.Component {
       <main tabIndex="0" className='App'>
         <div onKeyPress={(e) => this.handleKeyPress(e)}>
           <canvas ref="canvas" className="canvas">
-            <img id="image" ref="image" src={lander} className="lander" alt="lander" />
           </canvas>
         </div>
       </main>
