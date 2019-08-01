@@ -159,7 +159,6 @@ class App extends React.Component {
     }
 
     this.setState({barriers});
-    console.log(barriers)
     
   }
 
