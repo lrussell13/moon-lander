@@ -6,6 +6,7 @@ import animFrame2 from './Images/SpaceLander/pixil-frame-2.png';
 import animFrame3 from './Images/SpaceLander/pixil-frame-3.png';
 import animFrame4 from './Images/SpaceLander/pixil-frame-4.png';
 import animFrame5 from './Images/SpaceLander/pixil-frame-5.png';
+ 
 
 class App extends React.Component {
   state = {
